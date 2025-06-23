@@ -37,4 +37,4 @@ if __name__ == "__main__":
 
     prod.set_stock(15)
 
-    print(f"{prod.nombre} -- {prod.precio} -- {prod.get_stock}")
+    print(f"{prod.nombre} -- {prod.precio} -- {prod.stock}")

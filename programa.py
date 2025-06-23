@@ -1,4 +1,4 @@
-from tienda import Supermercado, Farmacia, Restaurante
+from tienda import Tienda, Supermercado, Farmacia, Restaurante
 import os
 #3. En un archivo programa.py, implementa la lógica necesaria para crear una tienda e ingresar sus productos. 
 # 
@@ -9,47 +9,34 @@ import os
 #Elegir el tipo de tienda
 ##Se evalua que el dato ingresado sea correcto para continuar
 print("=========== Bienvenido al programa especializado en Tiendas =======")
-valido = False
-while not valido:
-    try:
-        eleccion = int(input("""
+
+frase = """
 Elija el tipo de tienda a trabajar:
     1.- Farmacia
     2.- Restaurant
     3.- Supermercado
-elección: """))
+elección: """
 
-        if eleccion == 1:
-            valido = True
-            tipo_tienda = "Farmacia"
+eleccion = Tienda.validador_numero_1al3(frase)
 
-        elif eleccion == 2:
-            valido = True
-            tipo_tienda = "Restaurante"
+if eleccion == 1:
+    valido = True
+    tipo_tienda = "Farmacia"
 
-        elif eleccion == 3:
-            valido = True
-            tipo_tienda = "Supermercado"
+elif eleccion == 2:
+    valido = True
+    tipo_tienda = "Restaurante"
 
-        else:
-            print("\n::: El valor ingresado no es válido ::: \nDebe elegir un valor entero entre 1 y 3 incluyendolos")
-    except:
-        print("\n::: Error, valor ingresado no válido :::\nDebe elegir un valor entero entre 1 y 3 incluyendolos")
-    input("Aprete enter para continuar")
-    os.system('cls')
+elif eleccion == 3:
+    valido = True
+    tipo_tienda = "Supermercado"
+
 
 #se piden los atributos de la clase
 nombre = input(f"Ingrese el nombre de su {tipo_tienda}: ")
 
-valido = False
-while not valido:
-    try:
-        delivery = int(input(f"Ingrese el costo de delivery de su {tipo_tienda}: "))
-        valido = True
-    except:
-        print("\n::: Error, Debe ser un valor entero mayor o igual a cero :::\n")
-    input("Aprete enter para continuar")
-    os.system('cls')
+frase = f"Ingrese el costo de delivery de su {tipo_tienda}: "
+delivery = Tienda.validador_numero_positivo(frase)
 
 if tipo_tienda == "Farmacia":
     tienda = Farmacia(nombre, delivery)
@@ -71,10 +58,47 @@ while ingresar_productos:
         ingresar_productos = False
 
 os.system('cls')
+#ciclo para elegir listar productos, realizar venta o salir del programa
+
+print(f"\n========== Bienvenido a nuestra tienda de {tipo_tienda} ==========\n")
 while True:
     
-print(tienda.listar_productos())
+    frase = """Ingrese su elección:
+            1.- Listar los productos.
+            2.- Realizar una venta.
+            3.- Salir del programa.
+        elección: """
+    eleccion = Tienda.validador_numero_1al3(frase)
 
-input("Aprete enter para continuar")
-os.system('cls')
-#ciclo para elegir listar productos, realizar venta o salir del programa
+    if eleccion == 1:
+        print(tienda.listar_productos())
+
+    elif eleccion == 2:
+        
+        
+        nombre_producto = input("Ingrese el nombre del producto a comprar: ") #realizar un buscar
+        if Tienda.buscador(nombre_producto, tienda.lista_productos) is None:
+            print("\n\nEl Producto ingresado no se encuentra en nuestra base de datos\n\n")
+            input("Aprete enter para continuar")
+            os.system('cls')
+            break
+        cantidad_producto = Tienda.validador_numero_positivo("Ingrese la cantidad a comprar: ")
+
+        existe, cantidad, monto = tienda.venta(nombre_producto, cantidad_producto)
+
+        if existe:
+            print(f"El monto a pagar es ${monto} pesos por {cantidad} {nombre_producto} más delivery")
+        else: 
+            print(f"{monto} {cantidad}")
+
+    elif eleccion == 3:
+        print("Un buen momento para descansar, adiós")
+        exit()
+    
+    input("Aprete enter para continuar")
+    os.system('cls')
+
+    
+    
+
+

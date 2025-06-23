@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from producto import Producto
+import os
 
 #El equipo te ha solicitado diseñar e implementar la arquitectura de clases que involucra a la entidad principal “Tienda”. Estas son las consideraciones que se deben tener en cuenta respecto de las tiendas:
 
@@ -24,22 +25,47 @@ class Tienda(ABC):
         self.__lista_productos = []
 
     @staticmethod
-    def validador_numero_entero(stock:int) -> bool:
-        #Evalúa si el valor ingresado es entero
-        if stock >= 0:
-            return True
-        else:
-            return False
+    def validador_numero_1al3(frase_eleccion:str) -> bool:
+        #Evalúa si el valor ingresado es entero y entre 1 y 3
+        valido = False
+        while not valido:
+            try:
+                valor = int(input(frase_eleccion))
+                if valor >= 1 or valor <= 3:
+                    valido = True
+                    return valor
+                else:
+                    print("Valor no válido, ingresar un valor entero entre 1 y 3")                   
+                
+            except:
+                print("::: Error, debe ser un valor entero :::")
+            input("Aprete enter para continuar")
+            os.system('cls') 
 
-        
     @staticmethod
-    def buscador(objetivo:str,lista:list[str]) -> int:
+    def validador_numero_positivo(frase_eleccion):
+        #Evalúa si el valor ingresado es entero 
+        valido = False
+        while not valido:
+            try:
+                valor = int(input(frase_eleccion))
+                if valor >= 0:
+                    valido = True
+                    return valor
+                else:
+                    print("Valor no válido, ingresar un valor entero positivo")                   
+                
+            except:
+                print("::: Error, debe ser un valor entero positivo :::")
+            input("Aprete enter para continuar")
+            os.system('cls') 
+
+
+
+    @abstractmethod    
+    def buscador(self, objetivo:str) -> int:
         #Se entrega el valor objetivo y la lista donde se buscará, devuelve la posición dentro de la lista
-        for posicion in range(len(lista)):
-            if objetivo.lower() == lista[posicion].nombre.lower():
-                return posicion
-            else:
-                return None
+        pass
 
     #b. Un método para ingresar un producto (utilice COMPOSICIÓN, y opcionalmente COLABORACIÓN) 
     @abstractmethod
@@ -73,22 +99,22 @@ class Restaurante(Tienda):
         self.__delivery = delivery
         self.__lista_productos = []
 
+    def buscador(self, objetivo:str) -> int:
+        #Se entrega el valor objetivo y la lista donde se buscará, devuelve la posición dentro de la lista
+        for posicion in range(len(self.__lista_productos)):
+            if objetivo.lower() == self.__lista_productos[posicion].nombre.lower():
+                return posicion
+            else:
+                return None    
+
     def ingresar_producto(self):
         nombre_producto = input("\nIngrese el nombre del producto: ")
         #Evaluamos que el precio del producto sea un número entero mayor o igual a 0
-        #En caso de no ser valido, se vuelve a pedir que se ingrese el valor
-        valido = False
-        while not valido:
-            try:
-                precio = int(input("Ingrese el precio del producto: "))
-                valido = Tienda.validador_numero_entero(precio)
-                if not valido:
-                    print("\n¡Error! Se debe ingresar un valor entero mayor o igual a cero.\n")
-            except:
-                print("\n¡Error! Se debe ingresar un valor entero mayor o igual a cero.\n")
+        
+        precio = Tienda.validador_numero_positivo("Ingrese el precio del producto: ")
         
         #se busca el nombre del producto en la lista, si no se encuentra, se añade, si se encuentra se actualiza el stock
-        posicion = Tienda.buscador(nombre_producto, self.__lista_productos)
+        posicion = self.buscador(nombre_producto)
         if posicion is None:
             producto = Producto(nombre_producto, precio,)
             self.__lista_productos.append(producto)
@@ -112,12 +138,12 @@ class Restaurante(Tienda):
         # los productos de las tiendas de tipo Restaurante siempre tienen stock 0, por lo que no es necesario hacer validación ni modificar el stock (Tip: puede usar pass). 
 
         #Se busca la posición del producto dentro de la lista
-        posicion = Tienda.buscador(nombre_producto, self.__lista_productos)
+        posicion = self.buscador(nombre_producto)
         if posicion is None:
             return False, 0
         else:
             #se calcula el monto de la venta considerando el precio y cantidad del producto solicitado y el monto del delibery
-            monto = self.__lista_productos[posicion].precio * cantidad + self.__delivery
+            monto = self.lista_productos[posicion].precio * cantidad + self.__delivery
 
 
             return True, cantidad, monto
@@ -130,31 +156,30 @@ class Farmacia(Tienda):
         self.__delivery = delivery
         self.__lista_productos = []
 
+    def buscador(self, objetivo:str) -> int:
+        #Se entrega el valor objetivo y la lista donde se buscará, devuelve la posición dentro de la lista
+        for posicion in range(len(self.__lista_productos)):
+            if objetivo.lower() == self.__lista_productos[posicion].nombre.lower():
+                return posicion
+            else:
+                return None
+    
     def ingresar_producto(self):
         nombre_producto = input("\nIngrese el nombre del producto: ")
         #Evaluamos que el precio del producto sea un número entero mayor o igual a 0
         #En caso de no ser valido, se vuelve a pedir que se ingrese el valor
-        valido = False
-        while not valido:
-            try:
-                precio = int(input("Ingrese el precio del producto: "))
-                valido = Tienda.validador_numero_entero(precio)
-                if not valido:
-                    print("\n¡Error! Se debe ingresar un valor entero mayor o igual a cero.\n")
-            except:
-                print("\n¡Error! Se debe ingresar un valor entero mayor o igual a cero.\n")
-        
-        #Evaluamos el stock ingresado, en caso de no ser valido, se asume stock 0
+       
+        precio = Tienda.validador_numero_positivo("Ingrese el precio del producto: ")
+
         try:
             stock_ingresado = int(input("Ingrese el stock del producto: "))
-            valido = Tienda.validador_numero_entero(stock_ingresado)
-            if not valido:
+            if stock_ingresado < 0:
                 stock_ingresado = 0
         except:
             stock_ingresado = 0            
 
         #se busca el nombre del producto en la lista, si no se encuentra, se añade, si se encuentra se actualiza el stock
-        posicion = Tienda.buscador(nombre_producto, self.__lista_productos)
+        posicion = self.buscador(nombre_producto)
         if posicion is None:
             producto = Producto(nombre_producto, precio, stock_ingresado)
             self.__lista_productos.append(producto)
@@ -192,7 +217,7 @@ class Farmacia(Tienda):
 
 
         #Se busca la posición del producto dentro de la lista
-        posicion = Tienda.buscador(nombre_producto, self.__lista_productos)
+        posicion = self.buscador(nombre_producto)
         #se evalua condiciones de problema
         if cantidad > 3: 
             return False, cantidad, "La cantidad debe ser menor o igual a 3 unidades y tú solicitaste:"
@@ -221,31 +246,31 @@ class Supermercado(Tienda):
         self.__delivery = delivery
         self.__lista_productos = []
 
+    def buscador(self, objetivo:str) -> int:
+        #Se entrega el valor objetivo y la lista donde se buscará, devuelve la posición dentro de la lista
+        for posicion in range(len(self.__lista_productos)):
+            if objetivo.lower() == self.__lista_productos[posicion].nombre.lower():
+                return posicion
+            else:
+                return None
+    
     def ingresar_producto(self):
         nombre_producto = input("\nIngrese el nombre del producto: ")
         #Evaluamos que el precio del producto sea un número entero mayor o igual a 0
         #En caso de no ser valido, se vuelve a pedir que se ingrese el valor
-        valido = False
-        while not valido:
-            try:
-                precio = int(input("Ingrese el precio del producto: "))
-                valido = Tienda.validador_numero_entero(precio)
-                if not valido:
-                    print("\n¡Error! Se debe ingresar un valor entero mayor o igual a cero.\n")
-            except:
-                print("\n¡Error! Se debe ingresar un valor entero mayor o igual a cero.\n")
+        
+        precio = Tienda.validador_numero_positivo("Ingrese el precio del producto: ")
         
         #Evaluamos el stock ingresado, en caso de no ser valido, se asume stock 0
         try:
             stock_ingresado = int(input("Ingrese el stock del producto: "))
-            valido = Tienda.validador_numero_entero(stock_ingresado)
-            if not valido:
+            if stock_ingresado < 0:
                 stock_ingresado = 0
         except:
-            stock_ingresado = 0            
+            stock_ingresado = 0          
 
         #se busca el nombre del producto en la lista, si no se encuentra, se añade, si se encuentra se actualiza el stock
-        posicion = Tienda.buscador(nombre_producto, self.__lista_productos)
+        posicion = self.buscador(nombre_producto)
         if posicion is None:
             producto = Producto(nombre_producto, precio, stock_ingresado)
             self.__lista_productos.append(producto)
@@ -258,7 +283,7 @@ class Supermercado(Tienda):
 
 #NOTA: Considera que el método para listar los productos será llamado dentro de print, por lo que debe retornar un string.
 
-        retorno = (f"::::: Productos de nuestra Farmacia {self.__nombre} ::::\nProducto\tPrecio\t\tstock\n")
+        retorno = (f"::::: Productos de nuestro Supermercado {self.__nombre} ::::\nProducto\tPrecio\t\tstock\n")
 
         disponibles = "Pocos productos disponibles"
         items = []
@@ -280,7 +305,7 @@ class Supermercado(Tienda):
         # Las tiendas de tipo Supermercado deben tener stock existente del producto indicado (si no poseen stock, o no existe el producto solicitado, no se realiza ninguna acción). 
         # En el caso de las tiendas de tipo Supermercado, si la cantidad requerida es superior a la existente, solo se venderá la cantidad disponible (quedando entonces el stock del producto en 0). 
 
-        posicion = Tienda.buscador(nombre_producto, self.__lista_productos)
+        posicion = self.buscador(nombre_producto)
         #se evalua condiciones de problema
         if cantidad > 3: 
             return False, cantidad, "La cantidad debe ser menor o igual a 3 unidades y tú solicitaste:"
