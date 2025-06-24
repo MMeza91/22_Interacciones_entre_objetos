@@ -31,7 +31,7 @@ class Tienda(ABC):
         while not valido:
             try:
                 valor = int(input(frase_eleccion))
-                if valor >= 1 or valor <= 3:
+                if valor >= 1 and valor <= 3:
                     valido = True
                     return valor
                 else:
@@ -131,7 +131,6 @@ class Restaurante(Tienda):
         items = [f"{i.nombre}\t\t{i.precio}\n" for i in self.__lista_productos]
 
         return f"{retorno}{''.join(items)}"
-
         
     def venta(self,nombre_producto, cantidad):
         #● Para realizar una venta, se debe solicitar el nombre del producto que se desea vender y la cantidad requerida. 
@@ -183,9 +182,11 @@ class Farmacia(Tienda):
         if posicion is None:
             producto = Producto(nombre_producto, precio, stock_ingresado)
             self.__lista_productos.append(producto)
+            print("\n:::::: Producto ingresado ::::::::\n")
         
         else:
             self.__lista_productos[posicion].stock = stock_ingresado
+            print("\n:::::: Stock actualizado ::::::::\n")
 
     def listar_productos(self):
         #● Al listar los productos existentes, se debe ocultar el stock de los productos en el caso de las tiendas de tipo Farmacia. 
@@ -205,9 +206,6 @@ class Farmacia(Tienda):
 
         return f"{retorno}{''.join(items)}"
         
-
-    # d. Un método para realizar ventas (utilice COLABORACIÓN)
-
     def venta(self,nombre_producto, cantidad):
         #● Para realizar una venta, se debe solicitar el nombre del producto que se desea vender y la cantidad requerida.
         # Las tiendas de tipo Farmacia deben tener stock existente del producto indicado (si no poseen stock, o no existe el producto solicitado, no se realiza ninguna acción). 
@@ -249,6 +247,11 @@ class Supermercado(Tienda):
     def buscador(self, objetivo:str) -> int:
         #Se entrega el valor objetivo y la lista donde se buscará, devuelve la posición dentro de la lista
         for posicion in range(len(self.__lista_productos)):
+
+
+            print(f"{posicion} / {len(self.__lista_productos)}") #solo me muestra posición 0 y largo actual de la lista
+
+
             if objetivo.lower() == self.__lista_productos[posicion].nombre.lower():
                 return posicion
             else:
@@ -271,12 +274,15 @@ class Supermercado(Tienda):
 
         #se busca el nombre del producto en la lista, si no se encuentra, se añade, si se encuentra se actualiza el stock
         posicion = self.buscador(nombre_producto)
+        print(f"posición = {posicion}")
         if posicion is None:
             producto = Producto(nombre_producto, precio, stock_ingresado)
             self.__lista_productos.append(producto)
+            print("\n:::::: Producto ingresado ::::::::\n")
         
         else:
             self.__lista_productos[posicion].stock = stock_ingresado
+            print("\n:::::: Stock actualizado ::::::::\n")
 
     def listar_productos(self):
         #● Al listar los productos existentes, las tiendas de tipo Supermercado deben añadir el mensaje “Pocos productos disponibles” junto a la cantidad de stock del producto, en caso de que el stock del producto sea inferior a 10. 
@@ -297,8 +303,6 @@ class Supermercado(Tienda):
                 
 
         return f"{retorno}{''.join(items)}"
-
-    # d. Un método para realizar ventas (utilice COLABORACIÓN)
 
     def venta(self, nombre_producto, cantidad):
         #● Para realizar una venta, se debe solicitar el nombre del producto que se desea vender y la cantidad requerida. 

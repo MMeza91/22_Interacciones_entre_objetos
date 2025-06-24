@@ -40,10 +40,13 @@ delivery = Tienda.validador_numero_positivo(frase)
 
 if tipo_tienda == "Farmacia":
     tienda = Farmacia(nombre, delivery)
-if tipo_tienda == "Restaurante":
+elif tipo_tienda == "Restaurante":
     tienda = Restaurante(nombre, delivery)
-else:
+elif tipo_tienda == "Supermercado": 
     tienda = Supermercado(nombre, delivery)
+
+
+
 
 print(f"Su tienda de tipo {tipo_tienda} fue creada con exito")
 #ingresar productos
@@ -54,8 +57,10 @@ while ingresar_productos:
     pregunta = input()
     if pregunta.lower() == "s" or pregunta.lower() == "si":
         tienda.ingresar_producto()
-    else:
+    elif pregunta.lower() == "n" or pregunta.lower() == "no":
         ingresar_productos = False
+    else:
+        print("\nValor ingresado no válido\n")
 
 os.system('cls')
 #ciclo para elegir listar productos, realizar venta o salir del programa
@@ -77,7 +82,7 @@ while True:
         
         
         nombre_producto = input("Ingrese el nombre del producto a comprar: ") #realizar un buscar
-        if Tienda.buscador(nombre_producto, tienda.lista_productos) is None:
+        if tienda.buscador(nombre_producto) is None:
             print("\n\nEl Producto ingresado no se encuentra en nuestra base de datos\n\n")
             input("Aprete enter para continuar")
             os.system('cls')
