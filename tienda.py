@@ -105,7 +105,8 @@ class Restaurante(Tienda):
             if objetivo.lower() == self.__lista_productos[posicion].nombre.lower():
                 return posicion
             else:
-                return None    
+                pass
+        return None    
 
     def ingresar_producto(self):
         nombre_producto = input("\nIngrese el nombre del producto: ")
@@ -161,7 +162,9 @@ class Farmacia(Tienda):
             if objetivo.lower() == self.__lista_productos[posicion].nombre.lower():
                 return posicion
             else:
-                return None
+                pass
+            
+        return None
     
     def ingresar_producto(self):
         nombre_producto = input("\nIngrese el nombre del producto: ")
@@ -185,7 +188,17 @@ class Farmacia(Tienda):
             print("\n:::::: Producto ingresado ::::::::\n")
         
         else:
+
+#######################################
+#            print(f"{self.__lista_productos[posicion].stock} = {stock_ingresado}")
+######################################
+
             self.__lista_productos[posicion].stock = stock_ingresado
+            
+#######################################
+#            print(f"{self.__lista_productos[posicion].stock} = {stock_ingresado}")
+######################################
+
             print("\n:::::: Stock actualizado ::::::::\n")
 
     def listar_productos(self):
@@ -248,15 +261,15 @@ class Supermercado(Tienda):
         #Se entrega el valor objetivo y la lista donde se buscará, devuelve la posición dentro de la lista
         for posicion in range(len(self.__lista_productos)):
 
-
             print(f"{posicion} / {len(self.__lista_productos)}") #solo me muestra posición 0 y largo actual de la lista
-
 
             if objetivo.lower() == self.__lista_productos[posicion].nombre.lower():
                 return posicion
             else:
-                return None
-    
+                pass
+
+        return None
+
     def ingresar_producto(self):
         nombre_producto = input("\nIngrese el nombre del producto: ")
         #Evaluamos que el precio del producto sea un número entero mayor o igual a 0
@@ -274,7 +287,7 @@ class Supermercado(Tienda):
 
         #se busca el nombre del producto en la lista, si no se encuentra, se añade, si se encuentra se actualiza el stock
         posicion = self.buscador(nombre_producto)
-        print(f"posición = {posicion}")
+        #print(f"posición = {posicion}")
         if posicion is None:
             producto = Producto(nombre_producto, precio, stock_ingresado)
             self.__lista_productos.append(producto)
