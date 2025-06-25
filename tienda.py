@@ -188,17 +188,7 @@ class Farmacia(Tienda):
             print("\n:::::: Producto ingresado ::::::::\n")
         
         else:
-
-#######################################
-#            print(f"{self.__lista_productos[posicion].stock} = {stock_ingresado}")
-######################################
-
             self.__lista_productos[posicion].stock = stock_ingresado
-            
-#######################################
-#            print(f"{self.__lista_productos[posicion].stock} = {stock_ingresado}")
-######################################
-
             print("\n:::::: Stock actualizado ::::::::\n")
 
     def listar_productos(self):
@@ -260,8 +250,6 @@ class Supermercado(Tienda):
     def buscador(self, objetivo:str) -> int:
         #Se entrega el valor objetivo y la lista donde se buscará, devuelve la posición dentro de la lista
         for posicion in range(len(self.__lista_productos)):
-
-            print(f"{posicion} / {len(self.__lista_productos)}") #solo me muestra posición 0 y largo actual de la lista
 
             if objetivo.lower() == self.__lista_productos[posicion].nombre.lower():
                 return posicion
